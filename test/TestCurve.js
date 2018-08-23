@@ -1,4 +1,4 @@
-const TestCurve = artifacts.require("Curve.sol");
+const Curve = artifacts.require("Curve.sol");
 const CurveFactory = artifacts.require("GenericCurveFactory.sol");
 const util = require("util");
 const BN = require("bn.js");
@@ -22,7 +22,7 @@ contract('Curve', async (accounts) => {
     async function createSECP256K1() {
         const secp256k1 = await curveFactory.createCurve([secp256k1Data.fieldSize], [secp256k1Data.groupOrder], [secp256k1Data.lowSmax], [secp256k1Data.cofactor], [secp256k1Data.Gx, secp256k1Data.Gy], [secp256k1Data.A], [secp256k1Data.B], {from: operator});
         const newCurve = secp256k1.logs[0].args.newCurve;
-        return TestCurve.at(newCurve);
+        return Curve.at(newCurve);
     }
 
     async function createPrime256v1() {
@@ -37,7 +37,7 @@ contract('Curve', async (accounts) => {
 
         const secp256k1 = await curveFactory.createCurve([fieldSize], [groupOrder], [lowSmax], [cofactor], [Gx, Gy], [A], [B], {from: operator});
         const newCurve = secp256k1.logs[0].args.newCurve;
-        return TestCurve.at(newCurve);
+        return Curve.at(newCurve);
     }
 
     it('check SECP256K1', async () => {
