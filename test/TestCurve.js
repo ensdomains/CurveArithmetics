@@ -2,6 +2,7 @@ const Curve = artifacts.require("Curve.sol");
 const CurveFactory = artifacts.require("GenericCurveFactory.sol");
 const BN = require("bn.js");
 const assert = require("assert");
+const utils = require("./utils/utils");
 
 let curves = [
     require('./data/prime256v1'),
@@ -18,24 +19,8 @@ curves.forEach(function (data) {
 
         beforeEach(async () => {
             curveFactory = await CurveFactory.new({from: operator});
-            curve = await createCurve();
+            curve = await utils.createCurve(curveFactory, data, operator);
         });
-
-        async function createCurve() {
-            const c = await curveFactory.createCurve(
-                [data.fieldSize],
-                [data.groupOrder],
-                [data.lowSmax],
-                [data.cofactor],
-                [data.Gx, data.Gy],
-                [data.A],
-                [data.B],
-                {from: operator}
-            );
-
-            const newCurve = c.logs[0].args.newCurve;
-            return Curve.at(newCurve);
-        }
 
         // it('should detect that the given points are on the curve', async () => {
         //     try {
