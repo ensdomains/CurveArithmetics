@@ -22,8 +22,7 @@ curves.forEach(function (data) {
 
         describe(data.name + ' Arith', function () {
             before(async () => {
-                const bytecodeSize = (CurveFactory.bytecode.length - 2) / 2
-                curveFactory = await CurveFactory.new({from: operator})
+                let curveFactory = await CurveFactory.new({from: operator});
                 curve = await createCurve(curveFactory, data, operator);
             });
 
