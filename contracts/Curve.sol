@@ -18,7 +18,6 @@ interface CurveInterface {
  *
  * @author Alexander Vlasov (alex.m.vlasov@gmail.com).
  */
-
 contract Curve {
 
     // Field size
