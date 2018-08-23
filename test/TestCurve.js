@@ -2,22 +2,22 @@ const Curve = artifacts.require("Curve.sol");
 const CurveFactory = artifacts.require("GenericCurveFactory.sol");
 const BN = require("bn.js");
 const assert = require("assert");
-const t = require('truffle-test-utils');
-t.init();
-
-const secp256k1Data = require('./data/secp256k1');
 
 let curves = [
-    secp256k1Data,
+    require('./data/secp256k1'),
 ];
 
 curves.forEach(function (data) {
+
     contract('Curve with ' + data.name, async (accounts) => {
-        var curveFactory;
-        const operator = accounts[0]
+        let curve;
+        let curveFactory;
+
+        const operator = accounts[0];
 
         beforeEach(async () => {
-            curveFactory = await CurveFactory.new({from: operator})
+            curveFactory = await CurveFactory.new({from: operator});
+            curve = await createCurve();
         });
 
         async function createCurve() {
@@ -36,13 +36,7 @@ curves.forEach(function (data) {
             return Curve.at(newCurve);
         }
 
-        it('check ' + data.name, async () => {
-            // createCurve(uint256 fieldSize, uint256 groupOrder, uint256 lowSmax, uint256 cofactor, uint256[2] generator)
-            let curve = await createCurve();
-        });
-
         it('should detect that the given points are on the curve', async () => {
-            let curve = await createCurve();
             try {
                 for (const point of data.testdata.randomPoints) {
                     const result = await curve.onCurve(point);
@@ -55,7 +49,6 @@ curves.forEach(function (data) {
         });
 
         it('should detect that the given points are not on the curve', async () => {
-            let curve = await createCurve();
             for (const point of data.testdata.randomPoints) {
                 try {
                     const result = await curve.onCurve([point[0], point[0]]);
@@ -69,7 +62,6 @@ curves.forEach(function (data) {
         });
 
         it('should detect that the given points are valid public keys', async () => {
-            let curve = await createCurve();
             try {
                 for (const point of data.testdata.randomPoints) {
                     const result = await curve.isPubKey(point);
@@ -82,8 +74,6 @@ curves.forEach(function (data) {
         });
 
         it('should detect that the given points are not valid public keys', async () => {
-            let curve = await createCurve();
-            var ok = false
             for (const point of data.testdata.randomPoints) {
                 try {
                     const result = await curve.isPubKey([point[0], point[0]]);
@@ -99,7 +89,6 @@ curves.forEach(function (data) {
         it('should detect that the given signatures are valid', async () => {
             // return
             const message = data.testdata.message;
-            let curve = await createCurve();
             try {
                 for (const idx in data.testdata.keypairs) {
                     const keypair = data.testdata.keypairs[idx];
@@ -116,7 +105,6 @@ curves.forEach(function (data) {
         it('should detect that the public key does not correspond to the given signature', async () => {
             // return
             const message = data.testdata.message;
-            let curve = await createCurve();
             try {
                 for (const idx in data.testdata.keypairs) {
                     const keypair = data.testdata.keypairs[idx];
@@ -133,7 +121,6 @@ curves.forEach(function (data) {
         it('should detect that the given signatures and pubkeys are wrong for the given message', async () => {
             // return
             const message = "0x1234123412341234123412341234123412341234123412341234123412341234";
-            let curve = await createCurve();
             try {
                 for (const idx in data.testdata.keypairs) {
                     const keypair = data.testdata.keypairs[idx];
@@ -148,7 +135,6 @@ curves.forEach(function (data) {
         });
 
         it('should compress a set of points successfully', async () => {
-            let curve = await createCurve();
             try {
                 for (const keypair of data.testdata.keypairs) {
                     const result = await curve.compress(keypair.pub);
@@ -164,7 +150,6 @@ curves.forEach(function (data) {
         });
 
         it('should decompress a set of points successfully', async () => {
-            let curve = await createCurve();
             try {
                 for (const keypair of data.testdata.keypairs) {
                     const x = new BN(keypair.pub[0].substring(2), 16);
