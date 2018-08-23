@@ -1,16 +1,15 @@
 const TestCurve = artifacts.require("Curve.sol");
 const CurveFactory = artifacts.require("GenericCurveFactory.sol");
 const util = require("util");
-const testdata = require('./data/secp2561k_data.json');
 const BN = require("bn.js");
 const ethUtil = require("ethereumjs-util");
 const assert = require("assert");
 const t = require('truffle-test-utils')
 t.init();
 
-const secp256k1Data = require('./data/curves/secp256k1').curve;
+const secp256k1Data = require('./data/secp256k1');
+const testdata = secp256k1Data.data;
 // const expectThrow = require("../helpers/expectThrow");
-
 
 contract('Curve', async (accounts) => {
     var curve;

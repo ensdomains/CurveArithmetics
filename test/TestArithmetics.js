@@ -1,7 +1,6 @@
 const Curve = artifacts.require("Curve.sol");
 const CurveFactory = artifacts.require("GenericCurveFactory.sol");
 const util = require("util");
-const testdata = require('./data/secp2561k_data.json');
 const BN = require("bn.js");
 const ethUtil = require("ethereumjs-util");
 const assert = require("assert");
@@ -14,6 +13,9 @@ var curveFactory;
 var operator;
 const EC = require("elliptic").ec;
 const ec = new EC('secp256k1');
+
+const secp256k1Data = require('./data/secp256k1');
+const testdata = secp256k1Data.data;
 
 // const SECP256K1P = new BigNumber("0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F");
 // const SECP256K1N = new BigNumber("0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141");
@@ -37,7 +39,6 @@ async function createSECP256K1() {
 } 
 
 contract('Crypto', function (accounts) {
-    return;
     operator = accounts[0];
 
     describe('Secp256k1Arith', function () {
