@@ -1,186 +1,183 @@
 const Curve = artifacts.require("Curve.sol");
 const CurveFactory = artifacts.require("GenericCurveFactory.sol");
-const util = require("util");
 const BN = require("bn.js");
-const ethUtil = require("ethereumjs-util");
 const assert = require("assert");
-const t = require('truffle-test-utils')
+const t = require('truffle-test-utils');
 t.init();
 
 const secp256k1Data = require('./data/secp256k1');
-const testdata = secp256k1Data.data;
-// const expectThrow = require("../helpers/expectThrow");
 
-contract('Curve', async (accounts) => {
-    var curve;
-    var curveFactory;
-    const operator = accounts[0]
-    beforeEach(async () => {
-        curveFactory = await CurveFactory.new({from:operator})
-    })
+let curves = [
+    secp256k1Data,
+];
 
-    async function createSECP256K1() {
-        const secp256k1 = await curveFactory.createCurve([secp256k1Data.fieldSize], [secp256k1Data.groupOrder], [secp256k1Data.lowSmax], [secp256k1Data.cofactor], [secp256k1Data.Gx, secp256k1Data.Gy], [secp256k1Data.A], [secp256k1Data.B], {from: operator});
-        const newCurve = secp256k1.logs[0].args.newCurve;
-        return Curve.at(newCurve);
-    }
+curves.forEach(function (data) {
+    contract('Curve with ' + data.name, async (accounts) => {
+        var curveFactory;
+        const operator = accounts[0]
 
-    async function createPrime256v1() {
-        const fieldSize = new BN("FFFFFFFF00000001000000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFF", 16);
-        const groupOrder = new BN("FFFFFFFF00000000FFFFFFFFFFFFFFFFBCE6FAADA7179E84F3B9CAC2FC632551", 16);
-        const cofactor = new BN(1);
-        const Gx = new BN("6B17D1F2E12C4247F8BCE6E563A440F277037D812DEB33A0F4A13945D898C296", 16);
-        const Gy = new BN("4FE342E2FE1A7F9B8EE7EB4A7C0F9E162BCE33576B315ECECBB6406837BF51F5", 16);
-        const lowSmax = new BN("7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A0", 16);
-        const A = new BN("FFFFFFFF00000001000000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFC", 16);
-        const B = new BN("5AC635D8AA3A93E7B3EBBD55769886BC651D06B0CC53B0F63BCE3C3E27D2604B", 16);
+        beforeEach(async () => {
+            curveFactory = await CurveFactory.new({from: operator})
+        });
 
-        const secp256k1 = await curveFactory.createCurve([fieldSize], [groupOrder], [lowSmax], [cofactor], [Gx, Gy], [A], [B], {from: operator});
-        const newCurve = secp256k1.logs[0].args.newCurve;
-        return Curve.at(newCurve);
-    }
+        async function createCurve() {
+            const c = await curveFactory.createCurve(
+                [data.fieldSize],
+                [data.groupOrder],
+                [data.lowSmax],
+                [data.cofactor],
+                [data.Gx, data.Gy],
+                [data.A],
+                [data.B],
+                {from: operator}
+            );
 
-    it('check SECP256K1', async () => {
-        // createCurve(uint256 fieldSize, uint256 groupOrder, uint256 lowSmax, uint256 cofactor, uint256[2] generator)
-        curve = await createSECP256K1();
-    })
-    it('should detect that the given points are on the curve', async () => {
-        secp256k1 = await createSECP256K1();
-        try {
-            for (const point of testdata.randomPoints) {
-                const result = await secp256k1.onCurve(point);
-                assert(result);
-            }
-        } catch(e) {
-            console.log(e);
-            throw e;
+            const newCurve = c.logs[0].args.newCurve;
+            return Curve.at(newCurve);
         }
-    });
 
-    it('should detect that the given points are not on the curve', async () => {
-        secp256k1 = await createSECP256K1();
-        var ok = false
-        for (const point of testdata.randomPoints) {
+        it('check ' + data.name, async () => {
+            // createCurve(uint256 fieldSize, uint256 groupOrder, uint256 lowSmax, uint256 cofactor, uint256[2] generator)
+            let curve = await createCurve();
+        });
+
+        it('should detect that the given points are on the curve', async () => {
+            let curve = await createCurve();
             try {
-                const result = await secp256k1.onCurve([point[0], point[0]]);
-                assert(!result);
+                for (const point of data.testdata.randomPoints) {
+                    const result = await curve.onCurve(point);
+                    assert(result);
                 }
-            catch (e) {
+            } catch (e) {
                 console.log(e);
-                throw e
+                throw e;
             }
-        }
-    });
+        });
 
-    it('should detect that the given points are valid public keys', async () =>  {
-        secp256k1 = await createSECP256K1();
-        try {
-            for (const point of testdata.randomPoints) {
-                const result = await secp256k1.isPubKey(point);
-                assert(result);
+        it('should detect that the given points are not on the curve', async () => {
+            let curve = await createCurve();
+            for (const point of data.testdata.randomPoints) {
+                try {
+                    const result = await curve.onCurve([point[0], point[0]]);
+                    assert(!result);
+                }
+                catch (e) {
+                    console.log(e);
+                    throw e
+                }
             }
-        } catch(e) {
-            console.log(e);
-            throw e;
-        }
-    });
+        });
 
-    it('should detect that the given points are not valid public keys', async () =>  {
-        secp256k1 = await createSECP256K1();
-        var ok = false
-        for (const point of testdata.randomPoints) {
+        it('should detect that the given points are valid public keys', async () => {
+            let curve = await createCurve();
             try {
-                const result = await secp256k1.isPubKey([point[0], point[0]]);
-                assert(!result);
-            }
-            catch (e) {
+                for (const point of data.testdata.randomPoints) {
+                    const result = await curve.isPubKey(point);
+                    assert(result);
+                }
+            } catch (e) {
                 console.log(e);
-                throw e
+                throw e;
             }
-        }
-    });
+        });
 
-    it('should detect that the given signatures are valid', async () =>  {
-        // return
-        const message = testdata.message;
-        secp256k1 = await createSECP256K1();
-        try {
-            for (const idx in testdata.keypairs) {
-                const keypair = testdata.keypairs[idx];
-                const signature = testdata.signatures[idx];
-                const result = await secp256k1.validateSignature(message, signature, keypair.pub);
-                assert(result);
+        it('should detect that the given points are not valid public keys', async () => {
+            let curve = await createCurve();
+            var ok = false
+            for (const point of data.testdata.randomPoints) {
+                try {
+                    const result = await curve.isPubKey([point[0], point[0]]);
+                    assert(!result);
+                }
+                catch (e) {
+                    console.log(e);
+                    throw e
+                }
             }
-        } catch(e) {
-            console.log(e);
-            throw e;
-        }
-    });
+        });
 
-    it('should detect that the public key does not correspond to the given signature', async () => {
-        // return
-        const message = testdata.message;
-        secp256k1 = await createSECP256K1();
-        try {
-            for (const idx in testdata.keypairs) {
-                const keypair = testdata.keypairs[idx];
-                const signature = testdata.signatures[17 - idx];
-                const result = await secp256k1.validateSignature(message, signature, keypair.pub);
-                assert(!result);
+        it('should detect that the given signatures are valid', async () => {
+            // return
+            const message = data.testdata.message;
+            let curve = await createCurve();
+            try {
+                for (const idx in data.testdata.keypairs) {
+                    const keypair = data.testdata.keypairs[idx];
+                    const signature = data.testdata.signatures[idx];
+                    const result = await curve.validateSignature(message, signature, keypair.pub);
+                    assert(result);
+                }
+            } catch (e) {
+                console.log(e);
+                throw e;
             }
-        } catch(e) {
-            console.log(e);
-            throw e;
-        }
-    });
+        });
 
-    it('should detect that the given signatures and pubkeys are wrong for the given message', async () =>  {
-        // return
-        const message = "0x1234123412341234123412341234123412341234123412341234123412341234";
-        secp256k1 = await createSECP256K1();
-        try {
-            for (const idx in testdata.keypairs) {
-                const keypair = testdata.keypairs[idx];
-                const signature = testdata.signatures[idx];
-                const result = await secp256k1.validateSignature(message, signature, keypair.pub);
-                assert(!result);
+        it('should detect that the public key does not correspond to the given signature', async () => {
+            // return
+            const message = data.testdata.message;
+            let curve = await createCurve();
+            try {
+                for (const idx in data.testdata.keypairs) {
+                    const keypair = data.testdata.keypairs[idx];
+                    const signature = data.testdata.signatures[17 - idx];
+                    const result = await curve.validateSignature(message, signature, keypair.pub);
+                    assert(!result);
+                }
+            } catch (e) {
+                console.log(e);
+                throw e;
             }
-        } catch(e) {
-            console.log(e);
-            throw e;
-        }
-    });
+        });
 
-    it('should compress a set of points successfully', async () =>  {
-        secp256k1 = await createSECP256K1();
-        try {
-            for (const keypair of testdata.keypairs) {
-                const result = await secp256k1.compress(keypair.pub);
-                const x = new BN(keypair.pub[0].substring(2), 16);
-                const yBit = (new BN(keypair.pub[1].substring(2), 16)).mod(new BN(2));
-                assert(yBit.eq(new BN(result[0].toString(10))));
-                assert(x.eq(new BN(result[1].toString(10))));
+        it('should detect that the given signatures and pubkeys are wrong for the given message', async () => {
+            // return
+            const message = "0x1234123412341234123412341234123412341234123412341234123412341234";
+            let curve = await createCurve();
+            try {
+                for (const idx in data.testdata.keypairs) {
+                    const keypair = data.testdata.keypairs[idx];
+                    const signature = data.testdata.signatures[idx];
+                    const result = await curve.validateSignature(message, signature, keypair.pub);
+                    assert(!result);
+                }
+            } catch (e) {
+                console.log(e);
+                throw e;
             }
-        } catch(e) {
-            console.log(e);
-            throw e;
-        }
-    });
+        });
 
-    it('should decompress a set of points successfully', async () =>  {
-        secp256k1 = await createSECP256K1();
-        try {
-            for (const keypair of testdata.keypairs) {
-                const x = new BN(keypair.pub[0].substring(2), 16);
-                const y = new BN(keypair.pub[1].substring(2), 16);
-                const yBit = y.mod(new BN(2));
-                const result = await secp256k1.decompress([yBit], [x]);
-                assert(x.eq(new BN(result[0].toString(10))));
-                assert(y.eq(new BN(result[1].toString(10))));
+        it('should compress a set of points successfully', async () => {
+            let curve = await createCurve();
+            try {
+                for (const keypair of data.testdata.keypairs) {
+                    const result = await curve.compress(keypair.pub);
+                    const x = new BN(keypair.pub[0].substring(2), 16);
+                    const yBit = (new BN(keypair.pub[1].substring(2), 16)).mod(new BN(2));
+                    assert(yBit.eq(new BN(result[0].toString(10))));
+                    assert(x.eq(new BN(result[1].toString(10))));
+                }
+            } catch (e) {
+                console.log(e);
+                throw e;
             }
-        } catch(e) {
-            console.log(e);
-            throw e;
-        }
-    });
-})
+        });
+
+        it('should decompress a set of points successfully', async () => {
+            let curve = await createCurve();
+            try {
+                for (const keypair of data.testdata.keypairs) {
+                    const x = new BN(keypair.pub[0].substring(2), 16);
+                    const y = new BN(keypair.pub[1].substring(2), 16);
+                    const yBit = y.mod(new BN(2));
+                    const result = await curve.decompress([yBit], [x]);
+                    assert(x.eq(new BN(result[0].toString(10))));
+                    assert(y.eq(new BN(result[1].toString(10))));
+                }
+            } catch (e) {
+                console.log(e);
+                throw e;
+            }
+        });
+    })
+});

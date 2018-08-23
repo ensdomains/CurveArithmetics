@@ -1,6 +1,7 @@
 const BN = require("bn.js");
 
 module.exports = {
+    name: "prime256v1",
     fieldSize: new BN("FFFFFFFF00000001000000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFF", 16),
     groupOrder: new BN("FFFFFFFF00000000FFFFFFFFFFFFFFFFBCE6FAADA7179E84F3B9CAC2FC632551", 16),
     cofactor: new BN(1),

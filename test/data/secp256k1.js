@@ -1,6 +1,7 @@
 const BN = require("bn.js");
 
 module.exports = {
+    name: "secp256k1",
     fieldSize: new BN("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F", 16),
     groupOrder: new BN("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141", 16),
     cofactor: new BN(1),
@@ -9,7 +10,7 @@ module.exports = {
     lowSmax: new BN("7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A0", 16),
     A: new BN(0),
     B: new BN(7),
-    data: {
+    testdata: {
         message: "0x590910812c6348ea5bb6a5d503200ffee73d337801843b857f74e3b5a6a2229d",
         signatures: [
             [
