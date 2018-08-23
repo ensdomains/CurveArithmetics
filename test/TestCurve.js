@@ -10,7 +10,6 @@ let curves = [
 
 curves.forEach(function (data) {
     contract('Curve with ' + data.name, async (accounts) => {
-        return;
         let curve;
         let curveFactory;
 
