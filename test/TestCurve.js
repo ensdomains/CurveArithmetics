@@ -11,12 +11,11 @@ let curves = [
 curves.forEach(function (data) {
     contract('Curve with ' + data.name, async (accounts) => {
         let curve;
-        let curveFactory;
 
         const operator = accounts[0];
 
         beforeEach(async () => {
-            curveFactory = await CurveFactory.new({from: operator});
+            let curveFactory = await CurveFactory.new({from: operator});
             curve = await utils.createCurve(curveFactory, data, operator);
         });
 
