@@ -232,10 +232,7 @@ curves.forEach(function (data) {
                     assert(result[1].eq(infinityPoint[1]));
                     assert(result[2].eq(infinityPoint[2]));
                 });
-
             });
-
         });
-
     });
 });
