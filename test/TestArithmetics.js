@@ -19,37 +19,37 @@ let curves = [
 ];
 
 curves.forEach(function (data) {
+    return;
     contract('Crypto', function (accounts) {
         let curve;
         let curveFactory;
         operator = accounts[0];
 
+        beforeEach(async () => {
+            curveFactory = await CurveFactory.new({from: operator});
+            curve = await createCurve();
+        });
+
+        async function createCurve() {
+            const c = await curveFactory.createCurve(
+                [data.fieldSize],
+                [data.groupOrder],
+                [data.lowSmax],
+                [data.cofactor],
+                [data.Gx, data.Gy],
+                [data.A],
+                [data.B],
+                {from: operator}
+            );
+
+            const newCurve = c.logs[0].args.newCurve;
+            const crv = Curve.at(newCurve);
+            const pp = await crv.pp();
+            assert(pp.toString(10) === data.fieldSize.toString(10));
+            return crv
+        }
+
         describe(data.name + ' Arith', function () {
-
-            beforeEach(async () => {
-                curveFactory = await CurveFactory.new({from: operator});
-                curve = await createCurve();
-            });
-
-            async function createCurve() {
-                const c = await curveFactory.createCurve(
-                    [data.fieldSize],
-                    [data.groupOrder],
-                    [data.lowSmax],
-                    [data.cofactor],
-                    [data.Gx, data.Gy],
-                    [data.A],
-                    [data.B],
-                    {from: operator}
-                );
-
-                const newCurve = c.logs[0].args.newCurve;
-                const crv = Curve.at(newCurve);
-                const pp = await crv.pp();
-                assert(pp.toString(10) === fieldSize.toString(10));
-                return crv
-            }
-
             describe('#add()', function () {
 
                 it('should add a set of points successfully', async () => {
