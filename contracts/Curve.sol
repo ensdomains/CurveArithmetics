@@ -198,8 +198,7 @@ contract Curve {
         uint i;
 
         // wNAF
-        assembly
-        {
+        assembly {
             let dm := 0
             dwPtr := mload(0x40)
             mstore(0x40, add(dwPtr, 512)) // Should lower this.
@@ -258,16 +257,20 @@ contract Curve {
         uint p = pp;
         uint a = aa;
         uint b = bb;
-        if (0 == P[0] || P[0] == p || 0 == P[1] || P[1] == p)
+        if (0 == P[0] || P[0] == p || 0 == P[1] || P[1] == p) {
             return false;
+        }
+        
         uint LHS = mulmod(P[1], P[1], p); // y^2
         uint RHS = mulmod(mulmod(P[0], P[0], p), P[0], p); // x^3
+        
         if (a != 0) {
             RHS = addmod(RHS, mulmod(P[0], a, p), p); // x^3 + a*x
         }
         if (b != 0) {
             RHS = addmod(RHS, b, p); // x^3 + a*x + b
         }
+        
         return LHS == RHS;
     }
 
