@@ -1,12 +1,7 @@
 pragma solidity ^0.4.23;
 
 import {ECCMath} from "./ECCMath.sol";
-
-interface CurveInterface {
-    function getOrder() external view returns(uint order);
-    function validateSignature(bytes32 message, uint[2] rs, uint[2] Q) external view returns (bool);
-    function computePublicKey(uint priv) external view returns(uint[2] Q);
-}
+import {CurveInterface} from "./CurveInterface.sol";
 
 /**
  * @title Particular curve implementation
@@ -18,7 +13,7 @@ interface CurveInterface {
  *
  * @author Alexander Vlasov (alex.m.vlasov@gmail.com).
  */
-contract Curve {
+contract Curve is CurveInterface {
 
     // Field size
     uint public pp;
@@ -279,7 +274,7 @@ contract Curve {
     }
 
     /// @dev See Curve.validateSignature
-    function validateSignature(bytes32 message, uint[2] rs, uint[2] Q) public view returns (bool) {
+    function validateSignature(bytes32 message, uint[2] rs, uint[2] Q) external view returns (bool) {
         uint n = nn;
         uint p = pp;
         if(rs[0] == 0 || rs[0] >= n || rs[1] == 0 || rs[1] > lowSmax)
