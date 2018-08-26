@@ -1,5 +1,5 @@
 {
-  "name": "cryptoarithmetics",
+  "name": "@ensdomains/cryptoarithmetics",
   "version": "1.0.0",
   "description": "Custom curve crypto library",
   "main": "truffle-config.js",
@@ -25,12 +25,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/BANKEX/CurveArithmetics.git"
+    "url": "git+https://github.com/ensdomains/CurveArithmetics.git"
   },
   "author": "",
   "license": "SEE LICENSE IN LICENSE",
   "bugs": {
-    "url": "https://github.com/BANKEX/CurveArithmetics/issues"
+    "url": "https://github.com/ensdomains/CurveArithmetics/issues"
   },
-  "homepage": "https://github.com/BANKEX/CurveArithmetics#readme"
+  "homepage": "https://github.com/ensdomains/CurveArithmetics#readme"
 }
