@@ -1,0 +1,31 @@
+const BN = require("bn.js");
+
+module.exports = {
+    name: "prime256v1",
+    fieldSize: new BN("FFFFFFFF00000001000000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFF", 16),
+    groupOrder: new BN("FFFFFFFF00000000FFFFFFFFFFFFFFFFBCE6FAADA7179E84F3B9CAC2FC632551", 16),
+    cofactor: new BN(1),
+    Gx: new BN("6B17D1F2E12C4247F8BCE6E563A440F277037D812DEB33A0F4A13945D898C296", 16),
+    Gy: new BN("4FE342E2FE1A7F9B8EE7EB4A7C0F9E162BCE33576B315ECECBB6406837BF51F5", 16),
+    lowSmax: new BN("7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A0", 16),
+    A: new BN("FFFFFFFF00000001000000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFC", 16),
+    B: new BN("5AC635D8AA3A93E7B3EBBD55769886BC651D06B0CC53B0F63BCE3C3E27D2604B", 16),
+    testdata: {
+        message: "0x590910812c6348ea5bb6a5d503200ffee73d337801843b857f74e3b5a6a2229d",
+        signatures: [
+            [
+                "0x3a7e1c3004bb52e7cfc19c01a9bf6f4383ee899b06735ca9606cd4a1ad4972",
+                "0x8cec9c17bd82b67ad502a4e3e6b1a940cc0d0fb25051e23ab480a84bd372fe21"
+            ]
+        ],
+        keypairs: [
+            {
+                priv: "0x40ff99bb73ed5b661d864b58fda0a4687bd71d54b57835281f5ccb47dcda8cbe",
+                pub: [
+                    "0x9e954753c87144a290032a6b959ca1f74944e56587ed2b8b2a3bbf051c85ca97",
+                    "0x8b385a02dc0feaa890d6e5d4a83f706c33dcb5873b6228dcd40c036cebbbaadd"
+                ]
+            },
+        ]
+    }
+};
