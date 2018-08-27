@@ -24,6 +24,10 @@ module.exports = {
             [
                 "0x11bf1a9368450cbcb2e476b52fcbf30b5ce3ae43a83ba1e6352220fdd01f564",
                 "0xee74d1db3d5b2763695f25595c810a7d454cb0dcd632c588062ff779ea796d5"
+            ],
+            [
+                "0x5d06b421980a54f2c077574f446a2bd4a2181b9a3167a3388c6ff0f0c4dbe3db",
+                "0x7239a7bce99b687f37220c36c97708d718d66040d1e0fd0fa90947f57a769e31"
             ]
         ],
         keypairs: [
@@ -46,6 +50,13 @@ module.exports = {
                 pub: [
                     "0xeff28e04159e6ca7c4504a1fbba7602bb90d0557ce0b40cfaab9f36e16d5ba52",
                     "0x226cb9ca5fa4f75a4280c93ce87d7d1f2bf8638ab633b84d59c86e8c90fec962"
+                ]
+            },
+            {
+                priv: "0xeed5d029d8e908c4b57fc25a2d6491cec061ea7d2b7af499c82554f5fa5f2ba8",
+                pub: [
+                    "0x42156e353faf864ee7e601d8c0ca7429e9813a8404bf5f2aa87840ec217df97f",
+                    "0xd03a11dedbdcc2e4bbd841166913d8cd4604e83043d554c66b7577f05e4552f7"
                 ]
             },
         ]

@@ -84,21 +84,20 @@ curves.forEach(function (data) {
             }
         });
 
-        // it('should detect that the public key does not correspond to the given signature', async () => {
-        //     // return
-        //     const message = data.testdata.message;
-        //     try {
-        //         for (const idx in data.testdata.keypairs) {
-        //             const keypair = data.testdata.keypairs[idx];
-        //             const signature = data.testdata.signatures[data.testdata.length - idx];
-        //             const result = await curve.validateSignature(message, signature, keypair.pub);
-        //             assert(!result);
-        //         }
-        //     } catch (e) {
-        //         console.log(e);
-        //         throw e;
-        //     }
-        // });
+        it('should detect that the public key does not correspond to the given signature', async () => {
+            const message = data.testdata.message;
+            try {
+                for (const idx in data.testdata.keypairs) {
+                    const keypair = data.testdata.keypairs[idx];
+                    const signature = data.testdata.signatures[(data.testdata.keypairs.length - 1) - idx];
+                    const result = await curve.validateSignature(message, signature, keypair.pub);
+                    assert(!result);
+                }
+            } catch (e) {
+                console.log(e);
+                throw e;
+            }
+        });
 
         it('should detect that the given signatures and pubkeys are wrong for the given message', async () => {
             const message = "0x1234123412341234123412341234123412341234123412341234123412341234";
