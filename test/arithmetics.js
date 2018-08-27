@@ -55,7 +55,7 @@ contract('Crypto', function (accounts) {
                         continue;
                     }
                     const randPoint = testdata.randomPoints[idx];
-                    let result = await secp256k1._add(randPoint, testdata.randomPoints[idx - 1]);
+                    let result = await secp256k1.add(randPoint, testdata.randomPoints[idx - 1]);
                     result = await secp256k1.toAffine(result);
                     const expected = testdata.sums[idx - 1];
                     assert(result[0].eq(expected[0]));
@@ -69,7 +69,7 @@ contract('Crypto', function (accounts) {
                         continue;
                     }
                     const randPoint = testdata.randomPoints[idx];
-                    const result = await secp256k1._add(randPoint, [ZERO, ZERO, ZERO]);
+                    const result = await secp256k1.add(randPoint, [ZERO, ZERO, ZERO]);
                     const expected = randPoint;
                     assert(result[0].eq(expected[0]));
                     assert(result[1].eq(expected[1]));
@@ -83,7 +83,7 @@ contract('Crypto', function (accounts) {
                         continue;
                     }
                     const randPoint = testdata.randomPoints[idx];
-                    const result = await secp256k1._add([ZERO, ZERO, ZERO], randPoint);
+                    const result = await secp256k1.add([ZERO, ZERO, ZERO], randPoint);
                     const expected = randPoint;
                     assert(result[0].eq(expected[0]));
                     assert(result[1].eq(expected[1]));
@@ -97,9 +97,9 @@ contract('Crypto', function (accounts) {
                         continue;
                     }
                     const randPoint = testdata.randomPoints[idx];
-                    let result = await secp256k1._add(randPoint, testdata.randomPoints[idx - 1]);
+                    let result = await secp256k1.add(randPoint, testdata.randomPoints[idx - 1]);
                     result = await secp256k1.toAffine(result);
-                    let result2 = await secp256k1._add(testdata.randomPoints[idx - 1], randPoint);
+                    let result2 = await secp256k1.add(testdata.randomPoints[idx - 1], randPoint);
                     result2 = await secp256k1.toAffine(result2);
                     assert(result[0].eq(result2[0]));
                     assert(result[1].eq(result2[1]));
@@ -117,7 +117,7 @@ contract('Crypto', function (accounts) {
                     }
                     const randPoint = testdata.randomPoints[idx];
                     const P2 = testdata.randomPoints[idx - 1];
-                    let result = await secp256k1._addMixed(randPoint, [P2[0], P2[1]]);
+                    let result = await secp256k1.addMixed(randPoint, [P2[0], P2[1]]);
                     result = await secp256k1.toAffine(result);
                     const expected = testdata.sums[idx - 1];
                     assert(result[0].eq(expected[0]));
@@ -131,7 +131,7 @@ contract('Crypto', function (accounts) {
                         continue;
                     }
                     const randPoint = testdata.randomPoints[idx];
-                    const result = await secp256k1._addMixed(randPoint, [ZERO, ZERO]);
+                    const result = await secp256k1.addMixed(randPoint, [ZERO, ZERO]);
                     const expected = randPoint;
                     assert(result[0].eq(expected[0]));
                     assert(result[1].eq(expected[1]));
@@ -145,7 +145,7 @@ contract('Crypto', function (accounts) {
                     }
                     const randPoint = testdata.randomPoints[idx];
                     const P2 = testdata.randomPoints[idx];
-                    const result = await secp256k1._addMixed([ZERO, ZERO, ZERO], [P2[0], P2[1]]);
+                    const result = await secp256k1.addMixed([ZERO, ZERO, ZERO], [P2[0], P2[1]]);
                     const expected = randPoint;
                     assert(result[0].eq(expected[0]));
                     assert(result[1].eq(expected[1]));
@@ -159,10 +159,10 @@ contract('Crypto', function (accounts) {
                     }
                     const randPoint = testdata.randomPoints[idx];
                     let P2 = testdata.randomPoints[idx - 1];
-                    let result = await secp256k1._addMixed(randPoint, [P2[0], P2[1]]);
+                    let result = await secp256k1.addMixed(randPoint, [P2[0], P2[1]]);
                     result = await secp256k1.toAffine(result);
                     P2 = testdata.randomPoints[idx];
-                    let result2 = await secp256k1._addMixed(testdata.randomPoints[idx - 1], [P2[0], P2[1]]);
+                    let result2 = await secp256k1.addMixed(testdata.randomPoints[idx - 1], [P2[0], P2[1]]);
                     result2 = await secp256k1.toAffine(result2);
                     assert(result[0].eq(result2[0]));
                     assert(result[1].eq(result2[1]));
@@ -179,7 +179,7 @@ contract('Crypto', function (accounts) {
                         continue;
                     }
                     const randPoint = testdata.randomPoints[idx];
-                    let result = await secp256k1._double(randPoint);
+                    let result = await secp256k1.double(randPoint);
                     result = await secp256k1.toAffine(result);
                     const expected = testdata.doubles[idx];
                     assert(result[0].eq(expected[0]));
@@ -193,9 +193,9 @@ contract('Crypto', function (accounts) {
                         continue;
                     }
                     const randPoint = testdata.randomPoints[idx];
-                    let result = await secp256k1._double(randPoint);
+                    let result = await secp256k1.double(randPoint);
                     result = await secp256k1.toAffine(result);
-                    let result2 = await secp256k1._add(randPoint, randPoint);
+                    let result2 = await secp256k1.add(randPoint, randPoint);
                     result2 = await secp256k1.toAffine(result2);
                     assert(result[0].eq(result2[0]));
                     assert(result[1].eq(result2[1]));
@@ -203,7 +203,7 @@ contract('Crypto', function (accounts) {
             });
 
             it('should verify that doubling the point at infinity yields the point at infinity', async () =>  {
-                const result = await secp256k1._double([ZERO, ZERO, ZERO]);
+                const result = await secp256k1.double([ZERO, ZERO, ZERO]);
                 const infinityPoint = await secp256k1.getPointOfInfinity();
                 assert(result[0].eq(infinityPoint[0]));
                 assert(result[1].eq(infinityPoint[1]));
@@ -221,7 +221,7 @@ contract('Crypto', function (accounts) {
                     }
                     const scalar = testdata.randomInts[idx];
                     const randPoint = testdata.randomPoints[idx];
-                    let result = await secp256k1._mul(scalar, randPoint);
+                    let result = await secp256k1.mul(scalar, randPoint);
                     result = await secp256k1.toAffine(result);
                     const expected = testdata.products[idx];
                     assert(result[0].eq(expected[0]));
@@ -236,9 +236,9 @@ contract('Crypto', function (accounts) {
                     }
                     const scalar = new BN(2);
                     const randPoint = testdata.randomPoints[idx];
-                    let result = await secp256k1._mul([scalar], randPoint);
+                    let result = await secp256k1.mul([scalar], randPoint);
                     result = await secp256k1.toAffine(result);
-                    let result2 = await secp256k1._add(randPoint, randPoint);
+                    let result2 = await secp256k1.add(randPoint, randPoint);
                     result2 = await secp256k1.toAffine(result2);
                     assert(result[0].eq(result2[0]));
                     assert(result[1].eq(result2[1]));
@@ -247,7 +247,7 @@ contract('Crypto', function (accounts) {
 
             it('should verify that multiplying a point with 0 yields the point at infinity', async () =>  {
                 var P = testdata.randomPoints[0];
-                const result = await secp256k1._mul(0, P);
+                const result = await secp256k1.mul(0, P);
                 const infinityPoint = await secp256k1.getPointOfInfinity();
                 assert(result[0].eq(infinityPoint[0]));
                 assert(result[1].eq(infinityPoint[1]));
