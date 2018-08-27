@@ -34,7 +34,7 @@ curves.forEach(function (data) {
                             continue;
                         }
                         const randPoint = data.testdata.randomPoints[idx];
-                        let result = await curve._add(randPoint, data.testdata.randomPoints[idx - 1]);
+                        let result = await curve.add(randPoint, data.testdata.randomPoints[idx - 1]);
                         result = await curve.toAffine(result);
                         const expected = data.testdata.sums[idx - 1];
                         assert(result[0].eq(expected[0]));
@@ -48,7 +48,7 @@ curves.forEach(function (data) {
                             continue;
                         }
                         const randPoint = data.testdata.randomPoints[idx];
-                        const result = await curve._add(randPoint, [ZERO, ZERO, ZERO]);
+                        const result = await curve.add(randPoint, [ZERO, ZERO, ZERO]);
                         const expected = randPoint;
                         assert(result[0].eq(expected[0]));
                         assert(result[1].eq(expected[1]));
@@ -62,7 +62,7 @@ curves.forEach(function (data) {
                             continue;
                         }
                         const randPoint = data.testdata.randomPoints[idx];
-                        const result = await curve._add([ZERO, ZERO, ZERO], randPoint);
+                        const result = await curve.add([ZERO, ZERO, ZERO], randPoint);
                         const expected = randPoint;
                         assert(result[0].eq(expected[0]));
                         assert(result[1].eq(expected[1]));
@@ -76,9 +76,9 @@ curves.forEach(function (data) {
                             continue;
                         }
                         const randPoint = data.testdata.randomPoints[idx];
-                        let result = await curve._add(randPoint, data.testdata.randomPoints[idx - 1]);
+                        let result = await curve.add(randPoint, data.testdata.randomPoints[idx - 1]);
                         result = await curve.toAffine(result);
-                        let result2 = await curve._add(data.testdata.randomPoints[idx - 1], randPoint);
+                        let result2 = await curve.add(data.testdata.randomPoints[idx - 1], randPoint);
                         result2 = await curve.toAffine(result2);
                         assert(result[0].eq(result2[0]));
                         assert(result[1].eq(result2[1]));
@@ -96,7 +96,7 @@ curves.forEach(function (data) {
                         }
                         const randPoint = data.testdata.randomPoints[idx];
                         const P2 = data.testdata.randomPoints[idx - 1];
-                        let result = await curve._addMixed(randPoint, [P2[0], P2[1]]);
+                        let result = await curve.addMixed(randPoint, [P2[0], P2[1]]);
                         result = await curve.toAffine(result);
                         const expected = data.testdata.sums[idx - 1];
                         assert(result[0].eq(expected[0]));
@@ -110,7 +110,7 @@ curves.forEach(function (data) {
                             continue;
                         }
                         const randPoint = data.testdata.randomPoints[idx];
-                        const result = await curve._addMixed(randPoint, [ZERO, ZERO]);
+                        const result = await curve.addMixed(randPoint, [ZERO, ZERO]);
                         const expected = randPoint;
                         assert(result[0].eq(expected[0]));
                         assert(result[1].eq(expected[1]));
@@ -124,7 +124,7 @@ curves.forEach(function (data) {
                         }
                         const randPoint = data.testdata.randomPoints[idx];
                         const P2 = data.testdata.randomPoints[idx];
-                        const result = await curve._addMixed([ZERO, ZERO, ZERO], [P2[0], P2[1]]);
+                        const result = await curve.addMixed([ZERO, ZERO, ZERO], [P2[0], P2[1]]);
                         const expected = randPoint;
                         assert(result[0].eq(expected[0]));
                         assert(result[1].eq(expected[1]));
@@ -138,10 +138,10 @@ curves.forEach(function (data) {
                         }
                         const randPoint = data.testdata.randomPoints[idx];
                         let P2 = data.testdata.randomPoints[idx - 1];
-                        let result = await curve._addMixed(randPoint, [P2[0], P2[1]]);
+                        let result = await curve.addMixed(randPoint, [P2[0], P2[1]]);
                         result = await curve.toAffine(result);
                         P2 = data.testdata.randomPoints[idx];
-                        let result2 = await curve._addMixed(data.testdata.randomPoints[idx - 1], [P2[0], P2[1]]);
+                        let result2 = await curve.addMixed(data.testdata.randomPoints[idx - 1], [P2[0], P2[1]]);
                         result2 = await curve.toAffine(result2);
                         assert(result[0].eq(result2[0]));
                         assert(result[1].eq(result2[1]));
@@ -158,7 +158,7 @@ curves.forEach(function (data) {
                             continue;
                         }
                         const randPoint = data.testdata.randomPoints[idx];
-                        let result = await curve._double(randPoint);
+                        let result = await curve.double(randPoint);
                         result = await curve.toAffine(result);
                         const expected = data.testdata.doubles[idx];
                         assert(result[0].eq(expected[0]));
@@ -172,9 +172,9 @@ curves.forEach(function (data) {
                             continue;
                         }
                         const randPoint = data.testdata.randomPoints[idx];
-                        let result = await curve._double(randPoint);
+                        let result = await curve.double(randPoint);
                         result = await curve.toAffine(result);
-                        let result2 = await curve._add(randPoint, randPoint);
+                        let result2 = await curve.add(randPoint, randPoint);
                         result2 = await curve.toAffine(result2);
                         assert(result[0].eq(result2[0]));
                         assert(result[1].eq(result2[1]));
@@ -182,7 +182,7 @@ curves.forEach(function (data) {
                 });
 
                 it('should verify that doubling the point at infinity yields the point at infinity', async () => {
-                    const result = await curve._double([ZERO, ZERO, ZERO]);
+                    const result = await curve.double([ZERO, ZERO, ZERO]);
                     const infinityPoint = await curve.getPointOfInfinity();
                     assert(result[0].eq(infinityPoint[0]));
                     assert(result[1].eq(infinityPoint[1]));
@@ -200,7 +200,7 @@ curves.forEach(function (data) {
                         }
                         const scalar = data.testdata.randomInts[idx];
                         const randPoint = data.testdata.randomPoints[idx];
-                        let result = await curve._mul(scalar, randPoint);
+                        let result = await curve.mul(scalar, randPoint);
                         result = await curve.toAffine(result);
                         const expected = data.testdata.products[idx];
                         assert(result[0].eq(expected[0]));
@@ -215,9 +215,9 @@ curves.forEach(function (data) {
                         }
                         const scalar = new BN(2);
                         const randPoint = data.testdata.randomPoints[idx];
-                        let result = await curve._mul([scalar], randPoint);
+                        let result = await curve.mul([scalar], randPoint);
                         result = await curve.toAffine(result);
-                        let result2 = await curve._add(randPoint, randPoint);
+                        let result2 = await curve.add(randPoint, randPoint);
                         result2 = await curve.toAffine(result2);
                         assert(result[0].eq(result2[0]));
                         assert(result[1].eq(result2[1]));
@@ -226,7 +226,7 @@ curves.forEach(function (data) {
 
                 it('should verify that multiplying a point with 0 yields the point at infinity', async () => {
                     var P = data.testdata.randomPoints[0];
-                    const result = await curve._mul(0, P);
+                    const result = await curve.mul(0, P);
                     const infinityPoint = await curve.getPointOfInfinity();
                     assert(result[0].eq(infinityPoint[0]));
                     assert(result[1].eq(infinityPoint[1]));
