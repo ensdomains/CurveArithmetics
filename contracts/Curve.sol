@@ -7,7 +7,7 @@ import {CurveInterface} from "./CurveInterface.sol";
  * @title Particular curve implementation
  *
  * Based on reworked ECCMath from Andreas Olofsson using modern precompiles
- * and his _add, _double and _add implementations. Added "toAffine" public method for convenience.
+ * and his add, _double and add implementations. Added "toAffine" public method for convenience.
  *
  * Performs curve arithmetics and verifies signatures.
  *
@@ -68,7 +68,7 @@ contract Curve is CurveInterface {
     // Point addition, P + Q
     // inData: Px, Py, Pz, Qx, Qy, Qz
     // outData: Rx, Ry, Rz
-    function _add(uint[3] P, uint[3] Q) 
+    function add(uint[3] P, uint[3] Q)
         public
         view
         returns (uint[3])
@@ -93,7 +93,7 @@ contract Curve is CurveInterface {
             if (us[1] != us[3])
                 return pointOfInfinity;
             else {
-                return _double(P);
+                return double(P);
             }
         }
         uint h = addmod(us[2], p - us[0], p);
@@ -116,7 +116,7 @@ contract Curve is CurveInterface {
     // Point addition, P + Q. P Jacobian, Q affine.
     // inData: Px, Py, Pz, Qx, Qy
     // outData: Rx, Ry, Rz
-    function _addMixed(uint[3] P, uint[2] Q) public view returns (uint[3]) {
+    function addMixed(uint[3] P, uint[2] Q) public view returns (uint[3]) {
         if(P[2] == 0)
             return [Q[0], Q[1], 1];
         if(Q[1] == 0)
@@ -136,7 +136,7 @@ contract Curve is CurveInterface {
                 return pointOfInfinity;
             }
             else {
-                return _double(P);
+                return double(P);
             }
         }
         uint h = addmod(us[2], p - us[0], p);
@@ -157,7 +157,7 @@ contract Curve is CurveInterface {
     // Point doubling, 2*P
     // Params: Px, Py, Pz
     // Not concerned about the 1 extra mulmod.
-    function _double(uint[3] P) public view returns (uint[3]) {
+    function double(uint[3] P) public view returns (uint[3]) {
         uint p = pp;
         uint a = aa;
         if (P[2] == 0)
@@ -183,7 +183,7 @@ contract Curve is CurveInterface {
     // Multiplication dP. P affine, wNAF: w=5
     // Params: d, Px, Py
     // Output: Jacobian Q
-    function _mul(uint d, uint[2] P) public view returns (uint[3]) {
+    function mul(uint d, uint[2] P) public view returns (uint[3]) {
         uint p = pp;
         if (d == 0) {
             return pointOfInfinity;
@@ -212,14 +212,14 @@ contract Curve is CurveInterface {
         // Pre calculation
         uint[3][8] memory PREC; // P, 3P, 5P, 7P, 9P, 11P, 13P, 15P
         PREC[0] = [P[0], P[1], 1];
-        uint[3] memory X = _double(PREC[0]);
-        PREC[1] = _addMixed(X, P);
-        PREC[2] = _add(X, PREC[1]);
-        PREC[3] = _add(X, PREC[2]);
-        PREC[4] = _add(X, PREC[3]);
-        PREC[5] = _add(X, PREC[4]);
-        PREC[6] = _add(X, PREC[5]);
-        PREC[7] = _add(X, PREC[6]);
+        uint[3] memory X = double(PREC[0]);
+        PREC[1] = addMixed(X, P);
+        PREC[2] = add(X, PREC[1]);
+        PREC[3] = add(X, PREC[2]);
+        PREC[4] = add(X, PREC[3]);
+        PREC[5] = add(X, PREC[4]);
+        PREC[6] = add(X, PREC[5]);
+        PREC[7] = add(X, PREC[6]);
 
         uint[3] memory Q;
 
@@ -231,14 +231,14 @@ contract Curve is CurveInterface {
             assembly {
                 dj := byte(0, mload(add(dwPtr, i)))
             }
-            Q = _double(Q);
+            Q = double(Q);
             if (dj > 16) {
                 pIdx = (31 - dj) / 2; // These are the "negative ones", so invert y.
-                Q = _add(Q, [PREC[pIdx][0], p - PREC[pIdx][1], PREC[pIdx][2] ]);
+                Q = add(Q, [PREC[pIdx][0], p - PREC[pIdx][1], PREC[pIdx][2] ]);
             }
             else if (dj > 0) {
                 pIdx = (dj - 1) / 2;
-                Q = _add(Q, [PREC[pIdx][0], PREC[pIdx][1], PREC[pIdx][2] ]);
+                Q = add(Q, [PREC[pIdx][0], PREC[pIdx][1], PREC[pIdx][2] ]);
             }
             if (Q[0] == pointOfInfinity[0] && Q[1] == pointOfInfinity[1] && Q[2] == pointOfInfinity[2]) {
                 return Q;
@@ -283,9 +283,9 @@ contract Curve is CurveInterface {
             return false;
 
         uint sInv = ECCMath.invmod(rs[1], n);
-        uint[3] memory u1G = _mul(mulmod(uint(message), sInv, n), [Gx, Gy]);
-        uint[3] memory u2Q = _mul(mulmod(rs[0], sInv, n), Q);
-        uint[3] memory P = _add(u1G, u2Q);
+        uint[3] memory u1G = mul(mulmod(uint(message), sInv, n), [Gx, Gy]);
+        uint[3] memory u2Q = mul(mulmod(rs[0], sInv, n), Q);
+        uint[3] memory P = add(u1G, u2Q);
 
         if (P[2] == 0)
             return false;
@@ -297,7 +297,7 @@ contract Curve is CurveInterface {
 
     function computePublicKey(uint priv) public view returns(uint[2]) {
         uint[2] memory generator = [Gx, Gy];
-        uint[3] memory P = _mul(priv, generator);
+        uint[3] memory P = mul(priv, generator);
         return toAffine(P);
     }
 
@@ -306,7 +306,7 @@ contract Curve is CurveInterface {
         uint p = pp;
         uint n = nn;
         uint[2] memory generator = [Gx, Gy];
-        uint[3] memory P = _mul(k, generator);
+        uint[3] memory P = mul(k, generator);
         ECCMath.toZ1(P, p);
         uint r = P[0] % n;
         uint s = mulmod(priv, r, n);
