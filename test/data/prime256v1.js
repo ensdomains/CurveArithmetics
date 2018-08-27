@@ -28,6 +28,22 @@ module.exports = {
             [
                 "0x5d06b421980a54f2c077574f446a2bd4a2181b9a3167a3388c6ff0f0c4dbe3db",
                 "0x7239a7bce99b687f37220c36c97708d718d66040d1e0fd0fa90947f57a769e31"
+            ],
+            [
+                "0x426f9e5f7930ad48d17c414643992886f79e690beb71cabbe9f4a7d296e37c3e",
+                "0x614e6a790f4393e000209a7288628e8c5011cf914d10dfbcd11597cb1f11f89f"
+            ],
+            [
+                "0xefc3d2055534794ee34fa421e10d1ee23d964beabc1f70a6e3bd783f932b3803",
+                "0x1479229bc3d94d3a00a40874591669acc0235462fe9dc8806c90c8361fe6cd15"
+            ],
+            [
+                "0x855e2ac819f17f863fd0673b92cb97076c19f960c5bd48c7b0a426f14dcc7cf",
+                "0x996f6d98cd7e09eeb756d1c00124edf8b72cc286db42622e43afdcc65e3f2fb1"
+            ],
+            [
+                "0xcd842631c49c47131a532fbe06f988ec0a9f616a40effb40cc9ea4feba033bd0",
+                "0x13f255efa03ab0c33f2df3ddf61dc36a138c5ddc8cd6c42f2dccc4eb377f9880"
             ]
         ],
         keypairs: [
@@ -57,6 +73,34 @@ module.exports = {
                 pub: [
                     "0x42156e353faf864ee7e601d8c0ca7429e9813a8404bf5f2aa87840ec217df97f",
                     "0xd03a11dedbdcc2e4bbd841166913d8cd4604e83043d554c66b7577f05e4552f7"
+                ]
+            },
+            {
+                priv: "0x4a79e187e4a91650a757e8489a6cd392557b25b66599d49e096e6f7d93fba0f8",
+                pub: [
+                    "0x4148d9df08cf77e923083a398de274b97eb538213b2e918d5760615a9049c57a",
+                    "0x9aa21c3ff773dddf8a2af12a70a5c9956eeff83409c3ccf42aade97f4b572468"
+                ]
+            },
+            {
+                priv: "0x88493a86a89737279f1d5b8c6c572b00e8140cb2cad6f01c2e0089da5f4d3857",
+                pub: [
+                    "0xdcc48caefc445e96d9efacd07e9556bd9e0bf57ad652a97dc213ee6749d0bff6",
+                    "0x7760ec5be01962157f62b5d2674d416a13cd6ce4002a36807c74241b0bd7c770"
+                ]
+            },
+            {
+                priv: "0xe2c6f6a4ef5c548e8c3267c34dcdfd1e0064d53b5770b11544ef87dd5f232f30",
+                pub: [
+                    "0xb083e598d908b592578a413c74cd947455fc32de5d8e732e081799d34eb04cdd",
+                    "0x61b69b2d4c1a9f83b83236708bdb67310f29b657262b99d17f77cea31591e582"
+                ]
+            },
+            {
+                priv: "0xd8a221b722432d472c08bd7f7af1673c67557bbf79d40034bf95d0ae91623192",
+                pub: [
+                    "0xc09a9d3f7ee0a57947e9c46496ac0f57d5943222933059350b84edd3e121a2d2",
+                    "0xabc26ce6dc338210dff8e2705b0883848a31fe18576e93d719827e7bb69bdc08"
                 ]
             },
         ]
