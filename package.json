@@ -6,11 +6,12 @@
   "directories": {
     "test": "test"
   },
-    "scripts": {
+  "scripts": {
     "report": "truffle test",
     "lint": "solium --dir ./contracts"
   },
   "dependencies": {
+    "eth-gas-reporter": "^0.1.10",
     "async": "^2.6.0",
     "bn.js": "^4.11.8",
     "dotenv": "^5.0.1",
@@ -21,7 +22,7 @@
     "truffle-wallet-provider": "0.0.5"
   },
   "devDependencies": {
-      "solium": "^1.0.4"
+    "solium": "^1.0.4"
   },
   "repository": {
     "type": "git",
