@@ -7,7 +7,7 @@ import {CurveInterface} from "./CurveInterface.sol";
  * @title Particular curve implementation
  *
  * Based on reworked ECCMath from Andreas Olofsson using modern precompiles
- * and his add, _double and add implementations. Added "toAffine" public method for convenience.
+ * and his add, double and add implementations. Added "toAffine" public method for convenience.
  *
  * Performs curve arithmetics and verifies signatures.
  *
