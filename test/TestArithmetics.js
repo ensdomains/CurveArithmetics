@@ -16,7 +16,6 @@ let curves = [
 ];
 
 curves.forEach(function (data) {
-    return;
     contract('Crypto', function (accounts) {
         let operator = accounts[0];
         let curve;
