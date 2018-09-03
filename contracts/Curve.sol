@@ -46,11 +46,11 @@ contract Curve is CurveInterface {
         Gy = generator[1];
         aa = a;
         bb = b;
-        uint det = mulmod(a,a,fieldSize); //a^2
-        det = mulmod(det,a,fieldSize); //a^3
-        det = mulmod(4,det,fieldSize); //4*a^3
-        uint det2 = mulmod(b,b,fieldSize); //b^2
-        det2 = mulmod(27,det2,fieldSize); //27*b^2
+        uint det = mulmod(a, a, fieldSize); //a^2
+        det = mulmod(det, a, fieldSize); //a^3
+        det = mulmod(4, det, fieldSize); //4*a^3
+        uint det2 = mulmod(b, b, fieldSize); //b^2
+        det2 = mulmod(27, det2, fieldSize); //27*b^2
         require(addmod(det, det2, fieldSize) != 0); // 4*a^3 + 27*b^2 != 0
         if (lowSmax == 0) {
             lowSmax = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
