@@ -1,5 +1,5 @@
 {
-  "name": "@ensdomains/cryptoarithmetics",
+  "name": "@ensdomains/curvearithmetics",
   "version": "1.0.0",
   "description": "Custom curve crypto library",
   "main": "truffle-config.js",
